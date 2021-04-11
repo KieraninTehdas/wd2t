@@ -10,6 +10,7 @@ black = "*"
 flask = "*"
 simplejson = "*"
 python-dotenv = "*"
+pymongo = "*"
 
 [requires]
 python_version = "3.8"
