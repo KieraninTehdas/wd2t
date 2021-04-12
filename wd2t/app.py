@@ -1,34 +1,45 @@
+from pprint import pprint
+from wd2t.repositories import TagRepository
 from bson.objectid import ObjectId
 from flask import Flask, render_template
-from pymongo import MongoClient
+
+import wd2t.config
 
 app = Flask(__name__)
 
-mongo_username = "wd2t_app"
-mongo_password = "something very secure"
-
-mongo_client = MongoClient(
-    "localhost",
-    username=mongo_username,
-    password=mongo_password,
-    authSource="wd2t",
-)
-
-db = mongo_client.wd2t
+tag_repository = TagRepository(wd2t.config.get_database())
 
 
-@app.route("/")
-@app.route("/<name>")
-def hello_world(name=None):
-    if name:
-        new_doc_id = db.tags.insert_one(
-            {"name": "service", "value": "HALS"}
-        ).inserted_id
-    return render_template("index.html", name=name, inserted_id=new_doc_id)
+decision1 = {
+    "title": "A very important decision",
+    "id": "1",
+    "description": "This was a very difficult decision to make",
+    "tags": [{"key": "service_name", "value": "ABB"}],
+}
+decision2 = {
+    "title": "Another important decision",
+    "id": "2",
+    "description": "This decision was easy",
+}
 
 
-@app.route("/document/<_id>")
-def get_document_by_id(_id):
-    doc = db.tags.find_one({"_id": ObjectId(_id)})
-    print(doc)
-    return render_template("index.html", doc=doc)
+@app.route("/decisions")
+def render_decisions():
+    decisions = [decision1, decision2]
+    return render_template("index.html", decisions=decisions)
+
+
+@app.route("/decisions/<decision_id>")
+def render_decision(decision_id):
+    decision = None
+    if decision_id == decision1["id"]:
+        decision = decision1
+    elif decision_id == decision2["id"]:
+        decision = decision2
+
+    return render_template("decision.html", decision=decision)
+
+
+@app.route("/decisions/new")
+def render_new_decision_form():
+    return render_template("new_decision_form.html")

@@ -1,3 +1,5 @@
+db = db.getSiblingDB("wd2t")
+db.dummy.insert({})
 db.createUser(
     {
     user: "wd2t_app",
