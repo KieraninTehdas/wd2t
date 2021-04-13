@@ -1,11 +1,15 @@
 from pprint import pprint
+
+from flask.helpers import url_for
+from wd2t.forms import NewDecisionForm
 from wd2t.repositories import TagRepository
 from bson.objectid import ObjectId
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 
 import wd2t.config
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "secret yo"
 
 tag_repository = TagRepository(wd2t.config.get_database())
 
@@ -40,6 +44,12 @@ def render_decision(decision_id):
     return render_template("decision.html", decision=decision)
 
 
-@app.route("/decisions/new")
+@app.route("/decisions/new", methods=["GET", "POST"])
 def render_new_decision_form():
-    return render_template("new_decision_form.html")
+    form = NewDecisionForm()
+    if form.validate_on_submit():
+        pprint(form)
+        return redirect(url_for("render_decisions"))
+    else:
+        pprint(form.errors)
+    return render_template("new_decision_form.html", form=form)

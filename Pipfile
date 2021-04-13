@@ -12,6 +12,7 @@ flask = "*"
 simplejson = "*"
 python-dotenv = "*"
 pymongo = "*"
+flask-wtf = "*"
 
 [requires]
 python_version = "3.8"
