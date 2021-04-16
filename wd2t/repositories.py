@@ -1,26 +1,35 @@
-from bson.objectid import ObjectId
-from pymongo.database import Database
+from datetime import datetime
+from uuid import uuid4
+from wd2t import decision
+from pymongo.database import Database, Collection
 
 
-class TagRepository:
-    def __init__(self, db: Database) -> None:
-        self.collection = db.tags
+class MongoDbCrudRepository:
+    def __init__(self, db: Database, collection_name: str) -> None:
+        self.collection: Collection = db[collection_name]
 
-    def save_tag(self, tag: dict):
-        return self.collection.insert_one(tag).inserted_id
+    def save(self, document):
+        document["_id"] = uuid4()
+        result = self.collection.insert_one(document)
 
-    def get_tag_by_id(self, tag_id: str) -> dict:
-        return self.collection.find_one({"_id": ObjectId(tag_id)})
-
-
-class AdrRepository:
-    def __init__(self, db: Database) -> None:
-        self.collection = db.adrs
-
-    def save_adr(self, adr: dict):
-        insert_result_id = self.collection.insert_one(adr).inserted_id
-
-        if insert_result_id:
-            return self.collection.find_one({"_id": ObjectId(insert_result_id)})
+        if result:
+            return self.get_by_id(result.inserted_id)
         else:
             return None
+
+    def get_by_id(self, _id: str):
+        return self.collection.find_one({"_id": _id})
+
+
+class TagRepository(MongoDbCrudRepository):
+    def __init__(self, db: Database) -> None:
+        super().__init__(db, "tags")
+
+
+class DecisionRepository(MongoDbCrudRepository):
+    def __init__(self, db: Database) -> None:
+        super().__init__(db, "decisions")
+
+    def save(self, decision_document):
+        decision_document["documented_at"] = datetime.utcnow()
+        return super().save(decision_document)

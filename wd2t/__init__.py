@@ -7,6 +7,8 @@ from wd2t.error_handlers import initialise_error_handlers
 
 db = config.get_database()
 
+# TODO: Need a custom JSONEncoder to ISO format datetimes :(
+
 
 def init_app():
     app = Flask(__name__)

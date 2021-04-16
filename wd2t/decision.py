@@ -2,9 +2,13 @@ from typing import Iterable
 from datetime import date, datetime
 from uuid import uuid4
 
+from jinja2.utils import missing
+from wd2t import config
+from wd2t.repositories import DecisionRepository
+
 from marshmallow import Schema, fields, post_load, schema
-from flask import Blueprint, make_response, jsonify, request
-from marshmallow.utils import pprint
+from flask import Blueprint, make_response, jsonify, request, current_app
+from marshmallow.utils import EXCLUDE, pprint
 
 decision_blueprint = Blueprint("decision_blueprint", __name__, url_prefix="/decisions")
 
@@ -21,6 +25,8 @@ decision2 = {
 }
 
 decisions = [decision1, decision2]
+
+decision_repository = DecisionRepository(config.get_database())
 
 
 class Decision:
@@ -47,24 +53,22 @@ class TagSchema(Schema):
 
 
 class DecisionSchema(Schema):
-    _id = fields.UUID()
     title = fields.Str(required=True)
     description = fields.Str()
     tags = fields.List(fields.Nested(TagSchema()))
-    decided_on = fields.Date()
-    documented_at = fields.DateTime()
+    decided_on = fields.Date(missing=date.today())
 
-    @post_load
-    def construct_decision(self, data, **kwargs):
-        return Decision(
-            title=data["title"],
-            description=data.get("description"),
-            tags=data.get("tags"),
-            decided_on=data.get("decided_on"),
-        )
+    # @post_load
+    # def construct_decision(self, data, **kwargs):
+    #    return Decision(
+    #        title=data["title"],
+    #        description=data.get("description"),
+    #        tags=data.get("tags"),
+    #        decided_on=data.get("decided_on"),
+    #    )
 
 
-schema = DecisionSchema()
+schema = DecisionSchema(unknown=EXCLUDE)
 
 
 @decision_blueprint.route("/", methods=["GET"])
@@ -86,4 +90,7 @@ def get_decision_by_id(decision_id):
 def create_decision():
     new_decision = request.json
     serialised_decision = schema.load(new_decision)
-    return make_response(jsonify(schema.dump(serialised_decision)), 200)
+
+    result = decision_repository.save(schema.dump(serialised_decision))
+    pprint(result)
+    return make_response(jsonify(result), 200)

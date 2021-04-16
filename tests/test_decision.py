@@ -4,7 +4,7 @@ from datetime import date, datetime
 
 import pytest
 
-from wd2t.decision import Decision, create_decision
+from wd2t.decision import Decision, create_decision, DecisionSchema
 
 
 def test_new_decision():
@@ -14,11 +14,13 @@ def test_new_decision():
         "title": "A New Decision",
         "description": "Something we decided",
         "tags": tags,
-        "decided_on": today.isoformat(),
+        "decided_on": today,
     }
-    result: Decision = create_decision(_input)
 
-    assert result._id is not None
+    DecisionSchema().load(_input)
+    result = DecisionSchema().dump(_input)
+
+    assert result["_id"] is not None
     assert result.title == _input["title"]
     assert result.description == _input["description"]
     assert result.decided_on == today
