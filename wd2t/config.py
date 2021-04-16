@@ -7,8 +7,12 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 
-# _mongo_username = "wd2t_app"
-# _mongo_password = "something very secure"
+class Config:
+    FLASK_ENV = "development"
+    DEBUG = True
+    TESTING = True
+
+
 _mongo_username = os.environ.get("MONGO_USERNAME")
 _mongo_password = os.environ.get("MONGO_PASSWORD")
 

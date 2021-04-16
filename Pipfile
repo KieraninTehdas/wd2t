@@ -12,7 +12,6 @@ flask = "*"
 simplejson = "*"
 python-dotenv = "*"
 pymongo = "*"
-flask-wtf = "*"
 marshmallow = "*"
 
 [requires]

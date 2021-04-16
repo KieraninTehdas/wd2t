@@ -8,7 +8,7 @@ def handle_validation_error(e: marshmallow.exceptions.ValidationError):
     return response
 
 
-def initialise_error_handlers(app):
+def initialise_error_handlers(app: flask.Flask):
     app.register_error_handler(
         marshmallow.exceptions.ValidationError, handle_validation_error
     )
