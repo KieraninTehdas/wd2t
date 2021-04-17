@@ -1,29 +1,13 @@
-from datetime import date
-
 from flask import Blueprint, jsonify, make_response, request
-from marshmallow import Schema, fields, schema
 from marshmallow.utils import EXCLUDE
 
 from wd2t import config, tag_api
 from wd2t.repositories import DecisionRepository
+from wd2t.schemas import DecisionSchema
 
 decision_blueprint = Blueprint("decision_blueprint", __name__, url_prefix="/decisions")
 
 decision_repository = DecisionRepository(config.get_database())
-
-
-class TagSchema(Schema):
-    key = fields.Str(required=True)
-    value = fields.Str(required=True)
-
-
-class DecisionSchema(Schema):
-    title = fields.Str(required=True)
-    description = fields.Str()
-    tags = fields.List(fields.Nested(TagSchema()))
-    decided_on = fields.Date(missing=date.today())
-
-
 schema = DecisionSchema(unknown=EXCLUDE)
 
 

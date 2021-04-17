@@ -3,21 +3,15 @@ from typing import List
 from flask import Blueprint, request
 from flask.helpers import make_response
 from flask.json import jsonify
-from marshmallow import Schema, fields
 from marshmallow.utils import EXCLUDE
 
 from wd2t import config
 from wd2t.repositories import TagRepository
+from wd2t.schemas import TagSchema
 
 tag_blueprint = Blueprint("tag_blueprint", __name__, url_prefix="/tags")
 
 tag_repository = TagRepository(config.get_database())
-
-
-class TagSchema(Schema):
-    key = fields.Str(required=True)
-
-
 schema = TagSchema(unknown=EXCLUDE)
 
 
