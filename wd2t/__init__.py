@@ -6,6 +6,7 @@ from flask.json import JSONEncoder
 
 from wd2t import config
 from wd2t.decision_api import decision_blueprint
+from wd2t.tag_api import tag_blueprint
 from wd2t.error_handlers import initialise_error_handlers
 
 
@@ -27,5 +28,6 @@ def init_app():
         initialise_error_handlers(app)
 
         app.register_blueprint(decision_blueprint)
+        app.register_blueprint(tag_blueprint)
 
         return app

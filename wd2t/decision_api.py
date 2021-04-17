@@ -1,6 +1,6 @@
 from datetime import date
 
-from wd2t import config
+from wd2t import config, tag_api
 from wd2t.repositories import DecisionRepository
 
 from marshmallow import Schema, fields, schema
@@ -50,4 +50,5 @@ def create_decision():
     serialised_decision = schema.load(new_decision)
 
     result = decision_repository.save(schema.dump(serialised_decision))
+    tag_api.create_tags(result["tags"])
     return make_response(jsonify(result), 200)
