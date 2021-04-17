@@ -1,18 +1,26 @@
+from datetime import datetime, date
+from typing import Any
+
 from flask import Flask
+from flask.json import JSONEncoder
 
 from wd2t import config
-from wd2t.decision import decision_blueprint
+from wd2t.decision_api import decision_blueprint
 from wd2t.error_handlers import initialise_error_handlers
 
 
-db = config.get_database()
-
-# TODO: Need a custom JSONEncoder to ISO format datetimes :(
+class ISO8601DateTimeEncoder(JSONEncoder):
+    def default(self, o: Any):
+        if isinstance(o, datetime) or isinstance(o, date):
+            return o.isoformat()
+        return super().default(o)
 
 
 def init_app():
     app = Flask(__name__)
     app.config.from_object(config.Config)
+
+    app.json_encoder = ISO8601DateTimeEncoder
 
     with app.app_context():
 

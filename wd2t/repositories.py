@@ -1,10 +1,12 @@
 from datetime import datetime
-from uuid import uuid4
-from wd2t import decision
+from typing import Union
+from uuid import UUID, uuid4
+
 from pymongo.database import Database, Collection
 
 
 class MongoDbCrudRepository:
+    # TODO: Pagination!
     def __init__(self, db: Database, collection_name: str) -> None:
         self.collection: Collection = db[collection_name]
 
@@ -17,8 +19,14 @@ class MongoDbCrudRepository:
         else:
             return None
 
-    def get_by_id(self, _id: str):
+    def get_by_id(self, _id: Union[str, UUID]):
+        if isinstance(_id, str):
+            _id = UUID(_id)
+
         return self.collection.find_one({"_id": _id})
+
+    def get_all(self):
+        return list(self.collection.find())
 
 
 class TagRepository(MongoDbCrudRepository):
