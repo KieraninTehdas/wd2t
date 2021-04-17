@@ -1,11 +1,11 @@
 from datetime import date
 
-from wd2t import config, tag_api
-from wd2t.repositories import DecisionRepository
-
+from flask import Blueprint, jsonify, make_response, request
 from marshmallow import Schema, fields, schema
 from marshmallow.utils import EXCLUDE
-from flask import Blueprint, make_response, jsonify, request
+
+from wd2t import config, tag_api
+from wd2t.repositories import DecisionRepository
 
 decision_blueprint = Blueprint("decision_blueprint", __name__, url_prefix="/decisions")
 

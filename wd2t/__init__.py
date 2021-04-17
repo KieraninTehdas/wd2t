@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import date, datetime
 from typing import Any
 
 from flask import Flask
@@ -6,8 +6,8 @@ from flask.json import JSONEncoder
 
 from wd2t import config
 from wd2t.decision_api import decision_blueprint
-from wd2t.tag_api import tag_blueprint
 from wd2t.error_handlers import initialise_error_handlers
+from wd2t.tag_api import tag_blueprint
 
 
 class ISO8601DateTimeEncoder(JSONEncoder):

@@ -2,8 +2,8 @@ from datetime import datetime
 from typing import Union
 from uuid import UUID, uuid4
 
-from pymongo.database import Database, Collection
 from pymongo.collection import Cursor
+from pymongo.database import Collection, Database
 
 
 class MongoDbCrudRepository:

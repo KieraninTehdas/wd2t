@@ -1,13 +1,13 @@
 from typing import List
+
+from flask import Blueprint, request
 from flask.helpers import make_response
 from flask.json import jsonify
 from marshmallow import Schema, fields
-from flask import Blueprint, request
 from marshmallow.utils import EXCLUDE
 
 from wd2t import config
 from wd2t.repositories import TagRepository
-
 
 tag_blueprint = Blueprint("tag_blueprint", __name__, url_prefix="/tags")
 
