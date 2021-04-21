@@ -9,11 +9,10 @@ pytest = "*"
 isort = "*"
 
 [packages]
-flask = "*"
-simplejson = "*"
 python-dotenv = "*"
 pymongo = "*"
-marshmallow = "*"
+fastapi = "*"
+uvicorn = "*"
 
 [requires]
 python_version = "3.8"
