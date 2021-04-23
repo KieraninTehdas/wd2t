@@ -7,12 +7,6 @@ from pymongo.database import Database
 load_dotenv(find_dotenv())
 
 
-class Config:
-    FLASK_ENV = "development"
-    DEBUG = True
-    TESTING = True
-
-
 _mongo_username = os.environ.get("MONGO_USERNAME")
 _mongo_password = os.environ.get("MONGO_PASSWORD")
 

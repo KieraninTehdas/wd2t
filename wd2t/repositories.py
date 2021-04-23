@@ -1,9 +1,7 @@
 from datetime import datetime
-from pprint import pprint
 from typing import List, Union
 from uuid import UUID, uuid4
 
-from pymongo.collection import Cursor
 from pymongo.database import Collection, Database
 
 
@@ -26,7 +24,6 @@ class MongoDbCrudRepository:
                 _id = UUID(_id)
             except ValueError:
                 return None
-        pprint(f"Searching for {_id}")
         return self.collection.find_one({"_id": _id})
 
     # TODO: Pagination!
