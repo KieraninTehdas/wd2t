@@ -7,6 +7,11 @@ from pymongo.database import Database
 load_dotenv(find_dotenv())
 
 
+class Config:
+    def __init__(self) -> None:
+        self.root_url_prefix = os.environ.get("ROOT_URL_PREFIX", "/wd2t")
+
+
 _mongo_username = os.environ.get("MONGO_USERNAME")
 _mongo_password = os.environ.get("MONGO_PASSWORD")
 

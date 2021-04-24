@@ -15,7 +15,7 @@ class TestDecisions:
     decision_id = str(uuid4())
     now = datetime.utcnow()
     today = date.today()
-    url_prefix = "/decisions"
+    url_prefix = "/wd2t/decisions"
     decision = {
         "_id": decision_id,
         "title": "A decision",
