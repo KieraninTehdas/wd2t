@@ -27,7 +27,7 @@ def create_decision(
     for tag in tags_to_create:
         tag_repo.save(tag.dict())
 
-    return decision_repo.save(decision.dict())
+    return decision_repo.save_and_return_entity(decision.dict())
 
 
 @router.get("/{decision_id}", response_model=Decision)

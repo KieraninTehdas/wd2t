@@ -1,4 +1,3 @@
-import json
 from datetime import date, datetime
 from unittest import mock
 from uuid import UUID, uuid4
@@ -74,7 +73,6 @@ class TestDecisions:
         assert response.json() == [self.serialied_decision, self.serialied_decision]
 
     def test_create_decision(self):
-        tag_id = str(uuid4())
         preexisting_tag = {"key": "this_tag", "value": "exists"}
         new_tag = {"key": "thing_tag", "value": "needs_creating"}
         create_decision_request = {
@@ -82,14 +80,23 @@ class TestDecisions:
             "description": "A thing we decided on",
             "tags": [preexisting_tag, new_tag],
         }
-        created_decision = {**create_decision_request, "_id": self.decision_id}
-        self.decision_collection_mock.save.return_value = created_decision
-        self.tag_collection_mock.save.side_effect = lambda x: {**x, "_id": tag_id}
+        created_decision = {
+            **create_decision_request,
+            "_id": self.decision_id,
+            "documented_at": self.now.isoformat(),
+            "decided_on": self.today.isoformat(),
+        }
+        self.decision_collection_mock.save.return_value = self.decision_id
+        self.tag_collection_mock.save.side_effect = lambda _: self.tag_id
         self.tag_collection_mock.find_one.side_effect = lambda x: {
             preexisting_tag["key"]: preexisting_tag,
             new_tag["key"]: None,
-            tag_id: new_tag,
-        }[x.get("key", tag_id)]
+        }[x["key"]]
+        self.decision_collection_mock.find_one.side_effect = lambda _: created_decision
+
         response = self.client.post(f"{self.url_prefix}/", json=create_decision_request)
 
-        assert response == 200
+        assert response.status_code == 200
+        assert response.json() == created_decision
+        self.tag_collection_mock.insert_one.assert_called_once()
+        self.decision_collection_mock.insert_one.assert_called_once()

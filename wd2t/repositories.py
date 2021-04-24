@@ -9,12 +9,16 @@ class MongoDbCrudRepository:
     def __init__(self, db: Database, collection_name: str) -> None:
         self.collection: Collection = db[collection_name]
 
-    def save(self, document):
+    def save(self, document) -> str:
         document["_id"] = uuid4()
         result = self.collection.insert_one(document)
 
-        if result:
-            return self.get_by_id(result.inserted_id)
+        return result.inserted_id
+
+    def save_and_return_entity(self, document):
+        saved_entity_id = self.save(document)
+        if saved_entity_id:
+            return self.get_by_id(saved_entity_id)
         else:
             return None
 
@@ -49,7 +53,6 @@ class DecisionRepository(MongoDbCrudRepository):
     def __init__(self, db: Database) -> None:
         super().__init__(db, "decisions")
 
-    def save(self, decision_document: dict):
-        decision_document["decided_on"] = decision_document["decided_on"].isoformat()
+    def save_and_return_entity(self, decision_document: dict):
         decision_document["documented_at"] = datetime.utcnow()
-        return super().save(decision_document)
+        return super().save_and_return_entity(decision_document)
