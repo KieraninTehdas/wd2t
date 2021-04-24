@@ -15,14 +15,14 @@ class MongoDbCrudRepository:
 
         return result.inserted_id
 
-    def save_and_return_entity(self, document):
+    def save_and_return_entity(self, document) -> dict:
         saved_entity_id = self.save(document)
         if saved_entity_id:
             return self.get_by_id(saved_entity_id)
         else:
             return None
 
-    def get_by_id(self, _id: Union[str, UUID]):
+    def get_by_id(self, _id: Union[str, UUID]) -> dict:
         if isinstance(_id, str):
             try:
                 _id = UUID(_id)
@@ -31,7 +31,7 @@ class MongoDbCrudRepository:
         return self.collection.find_one({"_id": _id})
 
     # TODO: Pagination!
-    def get_all(self):
+    def get_all(self) -> List:
         return list(self.collection.find())
 
     def query(self, query_params: dict) -> List:
@@ -53,6 +53,6 @@ class DecisionRepository(MongoDbCrudRepository):
     def __init__(self, db: Database) -> None:
         super().__init__(db, "decisions")
 
-    def save_and_return_entity(self, decision_document: dict):
+    def save_and_return_entity(self, decision_document: dict) -> dict:
         decision_document["documented_at"] = datetime.utcnow()
         return super().save_and_return_entity(decision_document)

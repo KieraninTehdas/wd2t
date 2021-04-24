@@ -99,4 +99,5 @@ class TestDecisions:
         assert response.status_code == 200
         assert response.json() == created_decision
         self.tag_collection_mock.insert_one.assert_called_once()
+        assert self.tag_collection_mock.find_one.call_count == 2
         self.decision_collection_mock.insert_one.assert_called_once()

@@ -1,6 +1,5 @@
 from typing import List
 
-import pytest
 from fastapi import APIRouter, Depends, HTTPException
 from wd2t.dependencies import get_decision_repository, get_tag_repository
 from wd2t.models import Decision, DecisionBase
@@ -21,8 +20,6 @@ def create_decision(
         for tag in decision.tags
         if tag_repo.find_one(tag_key=tag.key, tag_value=tag.value) is None
     ]
-
-    print(f"Creating {len(tags_to_create)} new tags")
 
     for tag in tags_to_create:
         tag_repo.save(tag.dict())
