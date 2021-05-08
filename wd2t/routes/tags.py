@@ -11,7 +11,7 @@ router = APIRouter(prefix="/tags", tags=["tags"])
 
 @router.post("/", response_model=Tag)
 def create_tag(tag: TagBase, tag_repo: TagRepository = Depends(get_tag_repository)):
-    return tag_repo.save(tag.dict())
+    return tag_repo.save_and_return_entity(tag.dict())
 
 
 @router.get("/", response_model=List[Tag])

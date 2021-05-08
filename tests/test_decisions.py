@@ -32,45 +32,40 @@ class TestDecisions:
 
     @pytest.fixture(autouse=True)
     def run_around_test(self):
-        self.decision_collection_mock = mock.Mock(spec_set=Collection)
-        self.tag_collection_mock = mock.Mock(spec_set=Collection)
-        app.dependency_overrides[get_decision_repository] = lambda: DecisionRepository(
-            {"decisions": self.decision_collection_mock}
+        self.decision_repo_mock: DecisionRepository = mock.Mock(
+            spec_set=DecisionRepository
         )
-        app.dependency_overrides[get_tag_repository] = lambda: TagRepository(
-            {"tags": self.tag_collection_mock}
-        )
+        self.tag_repo_mock: TagRepository = mock.Mock(spec_set=TagRepository)
+        app.dependency_overrides[
+            get_decision_repository
+        ] = lambda: self.decision_repo_mock
+        app.dependency_overrides[get_tag_repository] = lambda: self.tag_repo_mock
 
     def test_get_decision_by_id(self):
-        self.decision_collection_mock.find_one.return_value = self.decision
+        self.decision_repo_mock.get_by_id.return_value = self.decision
 
         response = self.client.get(f"{self.url_prefix}/{self.decision_id}/")
 
         assert response.status_code == 200
         assert response.json() == self.serialied_decision
-        assert {
-            "_id": UUID(self.decision_id)
-        } == self.decision_collection_mock.find_one.call_args_list[0][0][0]
-        # For some reason this is failing with a weird assertion. Maybe due to inheritance.
-        # Above does the same job less elegantly...
-        # assert self.decision_collection_mock.find_one.assert_called_once_with(
-        #    {"_id": UUID(self.decision_id)}
-        # )
+        self.decision_repo_mock.get_by_id.assert_called_once_with(self.decision_id)
 
     def test_get_decision_by_id_when_not_found(self):
-        self.decision_collection_mock.find_one.return_value = []
+        self.decision_repo_mock.get_by_id.return_value = []
 
         response = self.client.get(f"{self.url_prefix}/{self.decision_id}/")
 
         assert response.status_code == 404
+        self.decision_repo_mock.get_by_id.assert_called_once_with(self.decision_id)
 
     def test_get_decisions(self):
-        self.decision_collection_mock.find.return_value = [self.decision, self.decision]
+        self.decision_repo_mock.get_all.return_value = [self.decision, self.decision]
 
         response = self.client.get(f"{self.url_prefix}/")
 
         assert response.status_code == 200
         assert response.json() == [self.serialied_decision, self.serialied_decision]
+        self.decision_repo_mock.get_all.assert_called_once()
 
     def test_create_decision(self):
         preexisting_tag = {"key": "this_tag", "value": "exists"}
@@ -86,18 +81,15 @@ class TestDecisions:
             "documented_at": self.now.isoformat(),
             "decided_on": self.today.isoformat(),
         }
-        self.decision_collection_mock.save.return_value = self.decision_id
-        self.tag_collection_mock.save.side_effect = lambda _: self.tag_id
-        self.tag_collection_mock.find_one.side_effect = lambda x: {
-            preexisting_tag["key"]: preexisting_tag,
-            new_tag["key"]: None,
-        }[x["key"]]
-        self.decision_collection_mock.find_one.side_effect = lambda _: created_decision
+        self.tag_repo_mock.find_one.side_effect = [preexisting_tag, None]
+        self.decision_repo_mock.save_and_return_entity.return_value = created_decision
 
         response = self.client.post(f"{self.url_prefix}/", json=create_decision_request)
 
         assert response.status_code == 200
         assert response.json() == created_decision
-        self.tag_collection_mock.insert_one.assert_called_once()
-        assert self.tag_collection_mock.find_one.call_count == 2
-        self.decision_collection_mock.insert_one.assert_called_once()
+        assert self.tag_repo_mock.find_one.call_count == 2
+        self.tag_repo_mock.save.assert_called_once_with(new_tag)
+        self.decision_repo_mock.save_and_return_entity.assert_called_once_with(
+            {**create_decision_request, "decided_on": self.today}
+        )
