@@ -3,7 +3,6 @@ from uuid import uuid4
 
 import pytest
 from fastapi.testclient import TestClient
-from pymongo.collection import Collection
 from wd2t.dependencies import get_tag_repository
 from wd2t.main import app
 from wd2t.repositories import TagRepository

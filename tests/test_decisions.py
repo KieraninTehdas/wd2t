@@ -1,10 +1,9 @@
 from datetime import date, datetime
 from unittest import mock
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 import pytest
 from fastapi.testclient import TestClient
-from pymongo.collection import Collection
 from wd2t.dependencies import get_decision_repository, get_tag_repository
 from wd2t.main import app
 from wd2t.repositories import DecisionRepository, TagRepository
