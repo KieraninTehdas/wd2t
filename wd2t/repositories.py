@@ -22,13 +22,19 @@ class MongoDbCrudRepository:
         else:
             return None
 
+    @staticmethod
+    def _convert_to_uuid(_id: Union[str, UUID]) -> UUID:
+        if isinstance(_id, UUID):
+            return _id
+        elif isinstance(_id, str):
+            return UUID(_id)
+        else:
+            raise TypeError(
+                f"Cannot convert unsupported id of type {type(_id)} to uuid"
+            )
+
     def get_by_id(self, _id: Union[str, UUID]) -> dict:
-        if isinstance(_id, str):
-            try:
-                _id = UUID(_id)
-            except ValueError:
-                return None
-        return self.collection.find_one({"_id": _id})
+        return self.collection.find_one({"_id": self._convert_to_uuid(_id)})
 
     # TODO: Pagination!
     def get_all(self) -> List:
@@ -36,6 +42,9 @@ class MongoDbCrudRepository:
 
     def query(self, query_params: dict) -> List:
         return list(self.collection.find(query_params))
+
+    def delete(self, _id: Union[str, UUID]):
+        self.collection.delete_one({"_id": self._convert_to_uuid(_id)})
 
 
 class TagRepository(MongoDbCrudRepository):
