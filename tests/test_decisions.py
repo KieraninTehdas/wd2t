@@ -20,13 +20,13 @@ class TestDecisions:
         "title": "A decision",
         "description": "Something we decided",
         "tags": [],
-        "documented_at": now,
-        "decided_on": today,
+        "documentedAt": now,
+        "decidedOn": today,
     }
     serialied_decision = {
         **decision,
-        "documented_at": now.isoformat(),
-        "decided_on": today.isoformat(),
+        "documentedAt": now.isoformat(),
+        "decidedOn": today.isoformat(),
     }
 
     @pytest.fixture(autouse=True)
@@ -77,8 +77,8 @@ class TestDecisions:
         created_decision = {
             **create_decision_request,
             "_id": self.decision_id,
-            "documented_at": self.now.isoformat(),
-            "decided_on": self.today.isoformat(),
+            "documentedAt": self.now.isoformat(),
+            "decidedOn": self.today.isoformat(),
         }
         self.tag_repo_mock.find_one.side_effect = [preexisting_tag, None]
         self.decision_repo_mock.save_and_return_entity.return_value = created_decision

@@ -65,7 +65,6 @@ class DecisionRepository(MongoDbCrudRepository):
 
     def save_and_return_entity(self, decision_document: dict) -> dict:
         decision_document["documented_at"] = get_utc_now()
-
         try:
             decision_document["decided_on"] = decision_document[
                 "decided_on"

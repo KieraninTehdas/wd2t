@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 from dotenv import find_dotenv, load_dotenv
 from pymongo import MongoClient
@@ -9,7 +10,11 @@ load_dotenv(find_dotenv())
 
 class Config:
     def __init__(self) -> None:
-        self.root_url_prefix = os.environ.get("ROOT_URL_PREFIX", "/wd2t")
+        self.root_url_prefix: str = os.environ.get("ROOT_URL_PREFIX", "/wd2t")
+        self.allowed_origins: List[str] = [
+            origin.strip()
+            for origin in os.environ.get("ALLOWED_ORIGINS", "").split(",")
+        ]
 
 
 _mongo_username = os.environ.get("MONGO_USERNAME")
