@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class DecisionsController < ApplicationController
   def index
-    @decisions = Decision.all
+    @decisions = Decision.all.order(date: :desc, created_at: :desc)
   end
 
   def show; end
