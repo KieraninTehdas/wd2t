@@ -5,15 +5,31 @@ class DecisionsController < ApplicationController
     @decisions = Decision.all.order(date: :desc, created_at: :desc)
   end
 
-  def show; end
+  def show
+    @decision = Decision.find(params[:id])
+  end
 
-  def new; end
+  def new
+    @decision = Decision.build(status: :pending, date: Time.zone.today)
+  end
 
-  def create; end
+  def create
+    @decision = Decision.new(decision_params)
+
+    if @decision.save
+      redirect_to @decision
+    else
+      render "new"
+    end
+  end
 
   def edit; end
 
   def update; end
 
   def destroy; end
+
+  def decision_params
+    params.require(:decision).permit(:title, :date, :description, :status)
+  end
 end

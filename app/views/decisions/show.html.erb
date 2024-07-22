@@ -1,4 +1,13 @@
 <div>
-  <h1 class="font-bold text-4xl">Decisions#show</h1>
-  <p>Find me in app/views/decisions/show.html.erb</p>
+  <div class="flex flex-col space-y-4">
+    <h2 class="font-bold text-2xl"><%= @decision.title %></h2>
+    <div class="flex space-x-4">
+      <p><%= @decision.date %></p>
+      <%= status_text(@decision.status) %>
+    </div>
+
+    <div>
+      <p><%= @decision.description %></p>
+    </div>
+  </div>
 </div>
