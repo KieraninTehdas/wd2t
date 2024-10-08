@@ -1,10 +1,39 @@
-<div>
-  <div class="flex flex-col space-y-4">
-    <%= form_with model: @decision do |form| %>
-      <%= form.text_field :title %>
-      <%= form.date_field :date %>
-      <%= form.text_field :description %>
-      <%= form.submit %>
+<div class="mt-10 w-full">
+  <%= form_with model: @decision do |form| %>
+    <% if @decision.errors.any? %>
+      <div>
+    <h2><%= pluralize(@decision.errors.count, "error") %> prohibited this article from being saved:</h2>
+ 
+    <ul>
+    <% @decision.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
     <% end %>
+    </ul>
   </div>
+    <% end %>
+
+    <div class="flex flex-col space-y-4">
+      <div class="flex flex-col space-y-2">
+        <%= form.label :title %>
+        <%= form.text_field :title %>
+      </div>
+
+      <div class="flex flex-col space-y-2">
+        <%= form.label :date %>
+        <%= form.date_field :date %>
+      </div>
+
+      <div class="flex flex-col space-y-2">
+        <%= form.label :description %>
+        <%= form.text_area:description %>
+      </div>
+
+      <div class="pt-7 flex space-x-2">
+        <%= form.submit class:"bg-gray-900 text-white rounded-md px-3 py-2" %>
+
+        <%= link_to "Back", decisions_path,
+          class: "bg-blue-400 text-white rounded-md px-3 py-2 font-medium" %>
+      </div>
+    </div>
+  <% end %>
 </div>

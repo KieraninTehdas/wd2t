@@ -23,9 +23,19 @@ class DecisionsController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    @decision = Decision.find(params[:id])
+  end
 
-  def update; end
+  def update
+    @decision = Decision.find(params[:id])
+
+    if @decision.update(decision_params)
+      redirect_to @decision
+    else
+      render :edit, status: :bad_request
+    end
+  end
 
   def destroy; end
 
