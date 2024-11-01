@@ -2,8 +2,8 @@
   <%= form_with model: @decision do |form| %>
     <% if @decision.errors.any? %>
       <div>
-    <h2><%= pluralize(@decision.errors.count, "error") %> prohibited this article from being saved:</h2>
- 
+        <h2><%= pluralize(@decision.errors.count, "error") %> prohibited this article from being saved:</h2>
+
     <ul>
     <% @decision.errors.full_messages.each do |msg| %>
       <li><%= msg %></li>

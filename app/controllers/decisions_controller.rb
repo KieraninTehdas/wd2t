@@ -24,7 +24,7 @@ class DecisionsController < ApplicationController
   end
 
   def edit
-    @decision = Decision.find(params[:id])
+    @decision ||= Decision.find(params[:id])
   end
 
   def update
