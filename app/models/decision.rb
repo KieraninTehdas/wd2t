@@ -3,7 +3,7 @@
 class Decision < ApplicationRecord
   validates :title, presence: true
 
-  enum status: {
+  enum :status, {
     pending: "pending",
     accepted: "accepted",
     rejected: "rejected",
