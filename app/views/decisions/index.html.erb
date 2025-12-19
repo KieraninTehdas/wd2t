@@ -2,6 +2,7 @@
   <h1 class="font-bold text-4xl pb-6">Why Did We Do That?</h1>
 
   <div class="max-w-lg mx-auto flex flex-col items-center space-y-4 mb-4">
+    <%= link_to "+ Decision", new_decision_path %>
     <% @decisions.each do |decision| %>
       <%= render partial: "summary", locals: { decision: decision } %>
     <% end %>

@@ -1,0 +1,16 @@
+.login-container {
+  max-width: fit-content;
+  margin: auto;
+}
+
+.login-field {
+  margin: 1rem 0;
+}
+
+.login-links {
+  text-align: center;
+}
+
+.login-link {
+  margin: 0.5rem 0;
+}
