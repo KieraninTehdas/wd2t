@@ -6,7 +6,6 @@ class SignUpsController < ApplicationController
   end
 
   def create
-    puts sign_up_params
     @user = User.new(sign_up_params)
     if @user.save
       start_new_session_for(@user)
