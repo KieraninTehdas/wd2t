@@ -6,6 +6,9 @@
     <%= form.label :date, "Date of decision" %>
     <%= form.date_field :date %>
 
+    <%= form.label :status, "Status" %>
+    <%= form.select :status, options_for_select(Decision.statuses.map { |status| [status[0].capitalize, status[0]]}) %>
+
 
     <%= form.label :description, "Context" %>
     <%= form.text_area :description, rows: 20 %>
