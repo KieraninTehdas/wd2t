@@ -40,6 +40,6 @@ class DecisionsController < ApplicationController
   def destroy; end
 
   def decision_params
-    params.require(:decision).permit(:title, :date, :description, :status)
+    params.require(:decision).permit(:title, :date, :content, :status)
   end
 end

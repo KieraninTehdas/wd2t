@@ -10,8 +10,8 @@
     <%= form.select :status, options_for_select(Decision.statuses.map { |status| [status[0].capitalize, status[0]]}) %>
 
 
-    <%= form.label :description, "Context" %>
-    <%= form.text_area :description, rows: 20 %>
+    <%= form.label :content, "Context" %>
+    <%= form.rich_textarea :content %>
 
     <div class="flex space-x-4">
       <%= form.submit "Create", class: "rounded-xl shadow-lg bg-green-500 text-white font-bold py-3 px-6 cursor-pointer" %>

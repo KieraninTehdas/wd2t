@@ -7,6 +7,8 @@ class Decision < ApplicationRecord
 
   validates :title, presence: true
 
+  has_rich_text :content
+
   enum :status, {
     pending: "pending",
     accepted: "accepted",
